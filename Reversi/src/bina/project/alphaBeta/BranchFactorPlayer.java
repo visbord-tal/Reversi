@@ -1,5 +1,7 @@
 package bina.project.alphaBeta;
 
+import static bina.project.alphaBeta.AlphBetaAlgorithms.evalBranch;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,32 +31,14 @@ public class BranchFactorPlayer extends Player {
 		Statistics stats = new Statistics();
 		stats.startMonitoring();
 		
-		int value = AlphBetaAlgorithms.evalBranch(move, mBranchingFactor, alpha, beta, stats);
+		int value = evalBranch(move, mBranchingFactor, alpha, beta, stats);
+//		int value = AlphBetaAlgorithms.iterativeDeepeningEvalBranch(move, mBranchingFactor, alpha, beta, stats);
 		
 		stats.endMonitoring();
 		mStatistics.add(stats);
 		mGameStatistics.visitNode(stats.getMaxDepth(), stats.getAvgBrnchingFactor());
 
-		boolean found = false;
-		GameNode childMove;
-		List<GameNode> nextMoves = AlphBetaAlgorithms.getNextMoves(move, mBranchingFactor);
-		List<GameNode> bestMoves = new ArrayList<GameNode>(); 
-		
-		for (int i = 0; i<nextMoves .size(); i++) {
-			childMove = nextMoves.get(i);
-			if(childMove.getValue() == value){
-				bestMoves.add(childMove);	
-			}
-		}
-
-		if(bestMoves.size()==0){
-			System.out.println("NOT FOUND!");
-			throw new RuntimeException();
-		}
-		
-		int randomIndex = (int)(Math.random()*(bestMoves.size()));
-		
-		return bestMoves.get(randomIndex);
+		return chooseBestMove(AlphBetaAlgorithms.getNextMoves(move, mBranchingFactor), value);
 	}
 
 }

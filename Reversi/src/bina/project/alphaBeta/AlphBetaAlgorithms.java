@@ -7,7 +7,7 @@ import java.util.Queue;
 
 public class AlphBetaAlgorithms {
 	
-	final static int NODE_COUNT = 100000;
+	final static int MAX_NODE_COUNT = 100000;
 	
 	public static int evalDepth(GameNode move, int depth , int alpha, int beta, Turn turn, IStatistics stats){
 		if(move.isLeaf()|| depth==0){
@@ -60,23 +60,23 @@ public class AlphBetaAlgorithms {
 		}
 	}
 		
-	public static int negaMaxEval(GameNode move, int depth, int alpha, int beta, Turn turn){
-		if(move.isLeaf() || depth==0){
-			int val = move.getHeuristicEval();
-			move.setValue(val);
-			return val;
-		}
-		for (GameNode childMove : move.getAllLegalMoves()) {
-			int childVal = negaMaxEval(childMove, depth-1, -beta, -alpha, turn.next());
-			Math.max(alpha, -childVal);	
-			if(alpha >= beta){
-				move.setValue(alpha);
-				return alpha;
-			}
-		}
-		move.setValue(alpha);
-		return alpha;
-	}
+//	public static int negaMaxEval(GameNode move, int depth, int alpha, int beta, Turn turn){
+//		if(move.isLeaf() || depth==0){
+//			int val = move.getHeuristicEval();
+//			move.setValue(val);
+//			return val;
+//		}
+//		for (GameNode childMove : move.getAllLegalMoves()) {
+//			int childVal = negaMaxEval(childMove, depth-1, -beta, -alpha, turn.next());
+//			Math.max(alpha, -childVal);	
+//			if(alpha >= beta){
+//				move.setValue(alpha);
+//				return alpha;
+//			}
+//		}
+//		move.setValue(alpha);
+//		return alpha;
+//	}
 	
 	static int count;
 	public static int evalBranch(GameNode move, int branchingFactor, int alpha, int beta,/* Turn turn,*/ IStatistics stats){
@@ -84,9 +84,9 @@ public class AlphBetaAlgorithms {
 		return evalBranch2(move, branchingFactor, 0, alpha, beta, Turn.MAX, stats);
 	}
 	
-	public static int evalBranch2(GameNode move, int branchingFactor, int depth ,int alpha, int beta, Turn turn, IStatistics stats){
+	private static int evalBranch2(GameNode move, int branchingFactor, int depth ,int alpha, int beta, Turn turn, IStatistics stats){
 		count++;
-		if(move.isLeaf()|| count>=NODE_COUNT){
+		if(move.isLeaf() || count>=MAX_NODE_COUNT){
 			int val = move.getHeuristicEval();
 //			move.setValue(val);
 			stats.visitNode(depth, 0);
@@ -136,6 +136,67 @@ public class AlphBetaAlgorithms {
 			return current;
 		}
 	}
+	
+	/**/
+	static int nodeCount;
+	public static int iterativeDeepeningEvalBranch(GameNode move, int branchingFactor, int alpha, int beta, IStatistics stats){
+		nodeCount = 0;
+		int maxDepth = 2;
+		int best = 0;
+		while(nodeCount < MAX_NODE_COUNT){
+			nodeCount = 0;
+			best = iterativeDeepeningEvalBranch2(move, branchingFactor, 0, alpha, beta, Turn.MAX, maxDepth ,stats );
+			maxDepth ++;
+		}
+		return best;
+	}
+	
+	private static int iterativeDeepeningEvalBranch2(GameNode move, int branchingFactor, int depth ,int alpha, int beta, Turn turn,int maxDepth ,IStatistics stats){
+		nodeCount++;
+		if(move.isLeaf()|| depth==maxDepth){
+			int val = move.getHeuristicEval();
+			stats.visitNode(depth, 0);
+			return val;
+		}
+		
+		int current;
+		List<GameNode> nextMoves = getNextMoves(move, branchingFactor);
+		int childValue;
+		
+		if(turn == Turn.MIN){//Min turn
+			
+			current = beta;
+			stats.visitNode(depth, nextMoves.size());
+			for (GameNode child : nextMoves) {
+				childValue = iterativeDeepeningEvalBranch2(child, branchingFactor ,  depth+1 , alpha, current, turn.next(), maxDepth,stats);
+				child.setValue(childValue);
+				
+				current = Math.min(current, childValue);
+				if(current <= alpha){
+					return alpha;
+				}
+			}
+			
+			return current;
+		}
+		
+		else{//Max turn
+			
+			current = alpha;
+			
+			for (GameNode child : nextMoves) {
+				childValue = iterativeDeepeningEvalBranch2(child, branchingFactor, depth+1, current, beta, turn.next(),maxDepth, stats);
+				child.setValue(childValue);
+				
+				current = Math.max(current, childValue);
+				if(current >= beta){
+					return beta;
+				}
+			}
+			return current;
+		}
+	}
+	
 //	
 //	static int count2;
 //	public static int evalBfs(GameNode move, int branchingFactor, int alpha, int beta, Turn turn, IStatistics stats){
@@ -214,5 +275,7 @@ public class AlphBetaAlgorithms {
 		}
 		return list;
 	} 
+	
+	
 
 }

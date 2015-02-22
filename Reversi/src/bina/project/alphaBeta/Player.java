@@ -1,6 +1,7 @@
 package bina.project.alphaBeta;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Player {
 
@@ -34,6 +35,27 @@ public abstract class Player {
 //			System.out.println("   Average Branch Factor: "+ stat.getAvgBrnchingFactor());
 //			System.out.println("   Total Time: "+stat.getTotalTime());
 //		}
+	}
+	
+	protected GameNode chooseBestMove(List<GameNode> nextMoves, int value) {
+		GameNode childMove;
+		List<GameNode> bestMoves = new ArrayList<GameNode>(); 
+		
+		for (int i = 0; i<nextMoves .size(); i++) {
+			childMove = nextMoves.get(i);
+			if(childMove.getValue() == value){
+				bestMoves.add(childMove);	
+			}
+		}
+
+		if(bestMoves.size()==0){
+			System.out.println("NOT FOUND!");
+			throw new RuntimeException();
+		}
+		
+		int randomIndex = (int)(Math.random()*(bestMoves.size()));
+		
+		return bestMoves.get(randomIndex);
 	}
 	
 	
