@@ -26,8 +26,8 @@ public class DepthPlayer extends Player {
 		
 		stats.endMonitoring();
 		mStatistics.add(stats);
-		mGameStatistics.visitNode(stats.getMaxDepth(), stats.getAvgBrnchingFactor());
-
+		mGameStatistics.visitNode(stats.getNumOfNodesVisited(), stats.getNumOfNodesVisited());
+		
 		return chooseBestMove(move.getAllLegalMoves(), value);
 	}
 

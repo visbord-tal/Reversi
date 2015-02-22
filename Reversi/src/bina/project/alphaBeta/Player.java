@@ -26,7 +26,7 @@ public abstract class Player {
 		System.out.println("########################################################################");
 		System.out.println("Average depth ="+ mGameStatistics.getAvgDepth());
 		System.out.println("Max depth ="+ mGameStatistics.getMaxDepth());
-		System.out.println("Node visited="+ mStatistics.get(0).getNumOfNodesVisited());
+		//System.out.println("Node visited="+ mGameStatistics.getNumOfNodesVisited());
 		System.out.println("########################################################################\n");
 		
 //		for (int i =0; i<mStatistics.size(); i++) {
@@ -41,9 +41,9 @@ public abstract class Player {
 		GameNode childMove;
 		List<GameNode> bestMoves = new ArrayList<GameNode>(); 
 		
-		for (int i = 0; i<nextMoves .size(); i++) {
+		for (int i = 0; i<nextMoves.size(); i++) {
 			childMove = nextMoves.get(i);
-			if(childMove.getValue() == value){
+			if(childMove.getValue()!=null && value == childMove.getValue()){
 				bestMoves.add(childMove);	
 			}
 		}

@@ -32,7 +32,7 @@ public class ReversiGameNode implements GameNode{
 		mBoard = new Board();
 		mCurrentTurn = Tile.BLACK;
 		
-		mHuristicEval = getHeuristicEval();
+//		mHuristicEval = getHeuristicEval();
 	}
 
 	private ReversiGameNode(ReversiGameNode move){
@@ -41,7 +41,9 @@ public class ReversiGameNode implements GameNode{
 	}
 
 	public static GameNode getInitalMove(){
-		return new ReversiGameNode();
+		ReversiGameNode node = new ReversiGameNode();
+		node.calcHeuristicEval();
+		return node;
 	}
 
 	@Override
@@ -81,8 +83,9 @@ public class ReversiGameNode implements GameNode{
 
 		newMove.mCurrentTurn = mCurrentTurn.opposite();
 		
-		newMove.mHuristicEval = newMove.getHeuristicEval();
-
+//		newMove.mHuristicEval = newMove.getHeuristicEval();
+		newMove.calcHeuristicEval();
+		
 		return newMove;
 	}
 
@@ -93,10 +96,12 @@ public class ReversiGameNode implements GameNode{
 
 	@Override
 	public int getHeuristicEval() {
-		return HeuristicEval.dynamic_heuristic_evaluation_function(this);
+		return mHuristicEval;
 	}
 	
-	
+	public void calcHeuristicEval() {
+		 mHuristicEval = HeuristicEval.dynamic_heuristic_evaluation_function(this);
+	}
 	
 	@Override
 	public int getScore() {
@@ -116,7 +121,7 @@ public class ReversiGameNode implements GameNode{
 
 
 	@Override
-	public int getValue() {
+	public Integer getValue() {
 		return mValue;
 	}
 
@@ -135,7 +140,8 @@ public class ReversiGameNode implements GameNode{
 	public ReversiGameNode passTurn() {
 		ReversiGameNode node = new ReversiGameNode(this);
 		node.mCurrentTurn = mCurrentTurn.opposite();
-		node.mHuristicEval = node.getHeuristicEval();
+//		node.mHuristicEval = node.getHeuristicEval();
+		node.calcHeuristicEval();
 		return node;
 	}
 	
@@ -182,7 +188,9 @@ public class ReversiGameNode implements GameNode{
 
 		private void flipAll(Pair p) {
 			for (Direction d : Direction.getAllDirections()) {
-				flipDirection(d.next(p), d);
+				if(d.hasNext(p, BOARD_SIZE)){
+					flipDirection(d.next(p), d);
+				}
 			}
 		}
 
@@ -197,6 +205,9 @@ public class ReversiGameNode implements GameNode{
 				return true;
 			}
 			else{
+				if(!direction.hasNext(p, BOARD_SIZE)){
+					return false;
+				}
 				boolean bool = flipDirection(direction.next(p), direction);
 				if(bool){
 					matrix[p.i][p.j] = mCurrentTurn;
@@ -226,6 +237,9 @@ public class ReversiGameNode implements GameNode{
 		}
 
 		private boolean checkDirection(Pair p, Direction direction){
+			if(!direction.hasNext(p, BOARD_SIZE)){
+				return false;
+			}
 			Pair next = direction.next(p);
 			if(direction.hasNext(p, BOARD_SIZE) && matrix[next.i][next.j] == mCurrentTurn.opposite() ){
 				while(direction.hasNext(next, BOARD_SIZE)){

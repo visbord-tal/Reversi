@@ -31,8 +31,8 @@ public class BranchFactorPlayer extends Player {
 		Statistics stats = new Statistics();
 		stats.startMonitoring();
 		
-		int value = evalBranch(move, mBranchingFactor, alpha, beta, stats);
-//		int value = AlphBetaAlgorithms.iterativeDeepeningEvalBranch(move, mBranchingFactor, alpha, beta, stats);
+//		int value = evalBranch(move, mBranchingFactor, alpha, beta, stats);
+		int value = AlphBetaAlgorithms.iterativeDeepeningEvalBranch(move, mBranchingFactor, alpha, beta, stats);
 		
 		stats.endMonitoring();
 		mStatistics.add(stats);

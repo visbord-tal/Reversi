@@ -3,21 +3,21 @@ package bina.project.alphaBeta;
 
 public class HeuristicEval {
 
+	private static int V[][] = {{20, -3, 11, 8, 8, 11, -3, 20},
+            {-3, -7, -4, 1, 1, -4, -7, -3},
+            {11, -4, 2, 2, 2, 2, -4, 11},
+            {8, 1, 2, -3, -3, 2, 1, 8},
+            {8, 1, 2, -3, -3, 2, 1, 8},
+            {11, -4, 2, 2, 2, 2, -4, 11},
+            {-3, -7, -4, 1, 1, -4, -7, -3},
+            {20, -3, 11, 8, 8, 11, -3, 20}};
+	
     public static int dynamic_heuristic_evaluation_function(ReversiGameNode reversiGameNode) {
         ReversiGameNode.Tile grid[][] = reversiGameNode.getBoardMatrix();
         ReversiGameNode.Tile my_color = reversiGameNode.getTurn();
         ReversiGameNode.Tile opp_color = reversiGameNode.getTurn().opposite();
         int my_score = 0;
         int opp_score = 0;
-        int V[][] = {{20, -3, 11, 8, 8, 11, -3, 20},
-                {-3, -7, -4, 1, 1, -4, -7, -3},
-                {11, -4, 2, 2, 2, 2, -4, 11},
-                {8, 1, 2, -3, -3, 2, 1, 8},
-                {8, 1, 2, -3, -3, 2, 1, 8},
-                {11, -4, 2, 2, 2, 2, -4, 11},
-                {-3, -7, -4, 1, 1, -4, -7, -3},
-                {20, -3, 11, 8, 8, 11, -3, 20}};
-
 
         //up and down
         for (int i = 0; i < 2; i++) {

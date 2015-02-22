@@ -12,7 +12,7 @@ public interface GameNode{
 
 	public void printState();
 	
-	public int getValue();
+	public Integer getValue();
 	
 	public void setValue(int value);
 	

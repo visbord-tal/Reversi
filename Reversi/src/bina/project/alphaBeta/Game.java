@@ -11,9 +11,6 @@ public class Game {
 
 		move.printState();
 		
-//		HumanPlayer humanPlayer = new HumanPlayer(turn);
-//		BranchFactorPlayer player= new BranchFactorPlayer(turn.next(), branchingFactor);
-		
 		boolean played = true;
 		boolean gameOver = false;
 		GameNode temp;
@@ -62,12 +59,9 @@ public class Game {
 		
 	}
 	
-	public void machineVsMachine(Player player1, Player player2){
+	public Player machineVsMachine(Player player1, Player player2){
 		Turn turn = Turn.MAX;
 		GameNode gameState = ReversiGameNode.getInitalMove();
-		
-//		Player player1 = new BranchFactorPlayer(turn, b1);
-//		Player player2 = new BranchFactorPlayer(turn.next(), b2);
 		
 		GameNode playerMove;
 		boolean gameOver = false;
@@ -86,24 +80,24 @@ public class Game {
 				}
 				played = false;
 			}
-//			gameState .printState();/**/
 			turn = turn.next();
 		}
 		
-		declareWinner(gameState, player1, player2);
+		return declareWinner(gameState, player1, player2);
 	}
 
-	private void declareWinner(GameNode move, Player player1, Player player2) {
+	private Player declareWinner(GameNode move, Player player1, Player player2) {
 		System.out.println("**************GAME_OVER**************");
 		int score = move.getScore();
 		System.out.println("SCORE:"+score);
 		if(score == 0){
 			System.out.println("it's a TIE!");
+			return null;
 		}
 		else{
 			System.out.println(score>0 ? "MAXI WINS!": "MIN WINS!");
+			return score>0 ? player1: player2;
 		}
-		System.out.println("**************************************\n");
 	}
 	
 	
