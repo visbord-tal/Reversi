@@ -21,5 +21,7 @@ public interface GameNode{
 	public int getMaxScore();
 
 	public GameNode passTurn();
+
+	public int getScore();
 	
  }

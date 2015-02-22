@@ -26,8 +26,7 @@ public abstract class Player {
 		System.out.println("Average depth ="+ mGameStatistics.getAvgDepth());
 		System.out.println("Max depth ="+ mGameStatistics.getMaxDepth());
 		System.out.println("Node visited="+ mStatistics.get(0).getNumOfNodesVisited());
-		
-		System.out.println("########################################################################");
+		System.out.println("########################################################################\n");
 		
 //		for (int i =0; i<mStatistics.size(); i++) {
 //			stat = mStatistics.get(i);

@@ -79,9 +79,9 @@ public class AlphBetaAlgorithms {
 	}
 	
 	static int count;
-	public static int evalBranch(GameNode move, int branchingFactor, int alpha, int beta, Turn turn, IStatistics stats){
+	public static int evalBranch(GameNode move, int branchingFactor, int alpha, int beta,/* Turn turn,*/ IStatistics stats){
 		count = 0;
-		return evalBranch2(move, branchingFactor, 0, alpha, beta, turn, stats);
+		return evalBranch2(move, branchingFactor, 0, alpha, beta, Turn.MAX, stats);
 	}
 	
 	public static int evalBranch2(GameNode move, int branchingFactor, int depth ,int alpha, int beta, Turn turn, IStatistics stats){
@@ -94,13 +94,13 @@ public class AlphBetaAlgorithms {
 		}
 		
 		int current;
-		List<GameNode> nextMoves;
+		List<GameNode> nextMoves = getNextMoves(move, branchingFactor);
 		int childValue;
 		
 		if(turn == Turn.MIN){//Min turn
 			
 			current = beta;
-			nextMoves = getNextMoves(move, branchingFactor);
+//			nextMoves = getNextMoves(move, branchingFactor);
 			stats.visitNode(depth, nextMoves.size());
 			for (GameNode child : nextMoves) {
 				childValue = evalBranch2(child, branchingFactor ,  depth+1 , alpha, current, turn.next(), stats);
@@ -120,7 +120,7 @@ public class AlphBetaAlgorithms {
 		else{//Max turn
 			
 			current = alpha;
-			nextMoves = getNextMoves(move, branchingFactor);
+//			nextMoves = getNextMoves(move, branchingFactor);
 			
 			for (GameNode child : nextMoves) {
 				childValue = evalBranch2(child, branchingFactor, depth+1, current, beta, turn.next(), stats);
@@ -136,72 +136,72 @@ public class AlphBetaAlgorithms {
 			return current;
 		}
 	}
-	
-	static int count2;
-	public static int evalBfs(GameNode move, int branchingFactor, int alpha, int beta, Turn turn, IStatistics stats){
-		count2 = 0;
-		Queue<GameNode> q = new  LinkedList<GameNode>();
-		q.add(move);
-		return evalBfs2(/*move, */branchingFactor, 0, alpha, beta, turn, stats, q);
-	}
-	
-	public static int evalBfs2(/*GameNode move,*/ int branchingFactor, int depth ,int alpha, int beta, Turn turn, IStatistics stats, Queue<GameNode> q){
-		GameNode move = q.poll();
-		count2++;
-		if(move.isLeaf()|| count2>=NODE_COUNT){
-			int val = move.getHeuristicEval();
-//			move.setValue(val);
-			stats.visitNode(depth, 0);
-			return val;
-		}
-		
-		int current;
-		List<GameNode> nextMoves;
-		int childValue;
-		
-		if(turn == Turn.MIN){//Min turn
-			
-			current = beta;
-			nextMoves = getNextMoves(move, branchingFactor);
-			stats.visitNode(depth, nextMoves.size());
-			
-			for (GameNode child : nextMoves) {
-				childValue = evalBfs2(/*child, */branchingFactor ,  depth+1 , alpha, current, turn.next(), stats, q);
-				q.add(child);
-				
-				child.setValue(childValue);
-				
-				current = Math.min(current, childValue);
-				if(current <= alpha){
-//					move.setValue(alpha);
-					return alpha;
-				}
-			}
-			
-//			move.setValue(current);
-			return current;
-		}
-		
-		else{//Max turn
-			
-			current = alpha;
-			nextMoves = getNextMoves(move, branchingFactor);
-			
-			for (GameNode child : nextMoves) {
-				childValue = evalBfs2(/*child,*/ branchingFactor, depth+1, current, beta, turn.next(), stats, q);
-				q.add(child);
-				child.setValue(childValue);
-				
-				current = Math.max(current, childValue);
-				if(current >= beta){
-//					move.setValue(beta);
-					return beta;
-				}
-			}
-//			move.setValue(current);
-			return current;
-		}
-	}
+//	
+//	static int count2;
+//	public static int evalBfs(GameNode move, int branchingFactor, int alpha, int beta, Turn turn, IStatistics stats){
+//		count2 = 0;
+//		Queue<GameNode> q = new  LinkedList<GameNode>();
+//		q.add(move);
+//		return evalBfs2(/*move, */branchingFactor, 0, alpha, beta, turn, stats, q);
+//	}
+//	
+//	public static int evalBfs2(/*GameNode move,*/ int branchingFactor, int depth ,int alpha, int beta, Turn turn, IStatistics stats, Queue<GameNode> q){
+//		GameNode move = q.poll();
+//		count2++;
+//		if(move.isLeaf()|| count2>=NODE_COUNT){
+//			int val = move.getHeuristicEval();
+////			move.setValue(val);
+//			stats.visitNode(depth, 0);
+//			return val;
+//		}
+//		
+//		int current;
+//		List<GameNode> nextMoves;
+//		int childValue;
+//		
+//		if(turn == Turn.MIN){//Min turn
+//			
+//			current = beta;
+//			nextMoves = getNextMoves(move, branchingFactor);
+//			stats.visitNode(depth, nextMoves.size());
+//			
+//			for (GameNode child : nextMoves) {
+//				childValue = evalBfs2(/*child, */branchingFactor ,  depth+1 , alpha, current, turn.next(), stats, q);
+//				q.add(child);
+//				
+//				child.setValue(childValue);
+//				
+//				current = Math.min(current, childValue);
+//				if(current <= alpha){
+////					move.setValue(alpha);
+//					return alpha;
+//				}
+//			}
+//			
+////			move.setValue(current);
+//			return current;
+//		}
+//		
+//		else{//Max turn
+//			
+//			current = alpha;
+//			nextMoves = getNextMoves(move, branchingFactor);
+//			
+//			for (GameNode child : nextMoves) {
+//				childValue = evalBfs2(/*child,*/ branchingFactor, depth+1, current, beta, turn.next(), stats, q);
+//				q.add(child);
+//				child.setValue(childValue);
+//				
+//				current = Math.max(current, childValue);
+//				if(current >= beta){
+////					move.setValue(beta);
+//					return beta;
+//				}
+//			}
+////			move.setValue(current);
+//			return current;
+//		}
+//	}
 
 	public static List<GameNode> getNextMoves(GameNode move,int branchingFactor) {
 		List<GameNode> allLegalMoves = move.getAllLegalMoves();

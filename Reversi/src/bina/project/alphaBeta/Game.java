@@ -5,14 +5,14 @@ import java.util.Scanner;
 
 public class Game {
 	
-	public void manVsMachine(int branchingFactor){
+	public void manVsMachine(HumanPlayer humanPlayer, Player player){
 		Turn turn = Turn.MAX;
 		GameNode move = ReversiGameNode.getInitalMove();
 
 		move.printState();
 		
-		HumanPlayer humanPlayer = new HumanPlayer(turn);
-		BranchingPlayer branchingPlayer= new BranchingPlayer(turn.next(), branchingFactor);
+//		HumanPlayer humanPlayer = new HumanPlayer(turn);
+//		BranchFactorPlayer player= new BranchFactorPlayer(turn.next(), branchingFactor);
 		
 		boolean played = true;
 		boolean gameOver = false;
@@ -36,7 +36,7 @@ public class Game {
 				}
 			}//MIN turn
 			else{
-				temp = branchingPlayer.playTurn(move);
+				temp = player.playTurn(move);
 				if(temp == null){
 					if(played){
 						System.out.println("computer got no moves, you go again.");
@@ -59,25 +59,20 @@ public class Game {
 			
 		}
 		move.printState();
-		//declareWinner(move, humanPlayer, branchingPlayer);
+		
 	}
 	
-	public void machineVsMachine(int b1, int b2){
+	public void machineVsMachine(Player player1, Player player2){
 		Turn turn = Turn.MAX;
 		GameNode gameState = ReversiGameNode.getInitalMove();
 		
-//		gameState.printState();
-		
-		BranchingPlayer player1 = new BranchingPlayer(turn, b1);
-		BranchingPlayer player2 = new BranchingPlayer(turn.next(), b2);
+//		Player player1 = new BranchFactorPlayer(turn, b1);
+//		Player player2 = new BranchFactorPlayer(turn.next(), b2);
 		
 		GameNode playerMove;
-		int val ;
 		boolean gameOver = false;
 		boolean played = true;
 		while (!gameOver){
-//			System.out.println("Turn: "+turn);
-			
 			playerMove = turn.isMax() ? player1.playTurn(gameState) : player2.playTurn(gameState);
 			
 			if(playerMove != null){
@@ -85,39 +80,30 @@ public class Game {
 				played = true;
 			}
 			else{
-//				System.out.println(turn+" PASS");
 				gameState = gameState.passTurn();
 				if (!played){
 					gameOver = true;
 				}
 				played = false;
 			}
-			
+//			gameState .printState();/**/
 			turn = turn.next();
-			
-//			gameState.printState();
-//			val = gameState.heuristicEval();
-//			System.out.println("SCORE:"+val);
 		}
 		
 		declareWinner(gameState, player1, player2);
 	}
 
-	private void declareWinner(GameNode move, BranchingPlayer player1, BranchingPlayer player2) {
+	private void declareWinner(GameNode move, Player player1, Player player2) {
 		System.out.println("**************GAME_OVER**************");
-		int val = move.getHeuristicEval();
-		System.out.println("SCORE:"+val);
-		if(val == 0){
+		int score = move.getScore();
+		System.out.println("SCORE:"+score);
+		if(score == 0){
 			System.out.println("it's a TIE!");
 		}
 		else{
-			System.out.println(val>0 ? "MAXI WINS!": "MIN WINS!");
+			System.out.println(score>0 ? "MAXI WINS!": "MIN WINS!");
 		}
-		System.out.println("PLAYER 1 BRANCH:"+player1.getBranchingFactor());
-		player1.printStatistics();
-		System.out.println("PLAYER 2 BRANCH:"+player2.getBranchingFactor());
-		player2.printStatistics();
-		
+		System.out.println("**************************************\n");
 	}
 	
 	

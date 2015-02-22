@@ -5,6 +5,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Comparator;
 
+import bina.project.alphaBeta.ReversiGameNode.Tile;
+
 public class ReversiGameNode implements GameNode{
 
 	public static int BOARD_SIZE = 8;
@@ -13,22 +15,29 @@ public class ReversiGameNode implements GameNode{
 
 	private Tile mCurrentTurn;
 
-	private int mValue;
+	private Integer mValue;
 
 	private List<GameNode> mChildMoves;
-
-//	private int mHeuristicEval;
+	
+	private Comparator<GameNode> mComparator = new Comparator<GameNode>() {
+		@Override
+		public int compare(GameNode o1, GameNode o2) {
+			return o2.getHeuristicEval() - o1.getHeuristicEval();
+		}
+	}; 
+	
+	private int mHuristicEval;//TEMP
 
 	private ReversiGameNode(){
 		mBoard = new Board();
 		mCurrentTurn = Tile.BLACK;
-		calcHeuristicEval();
+		
+		mHuristicEval = getHeuristicEval();
 	}
 
 	private ReversiGameNode(ReversiGameNode move){
 		mBoard = new Board(move.mBoard);
 		mCurrentTurn = move.mCurrentTurn;
-//		calcHeuristicEval();
 	}
 
 	public static GameNode getInitalMove(){
@@ -55,22 +64,11 @@ public class ReversiGameNode implements GameNode{
 				}
 			}
 		}	
-		mChildMoves = moves;
+		mChildMoves = moves;//mBoard  mCurrentTurn this
 		
-		sortChildMoves();
+		Collections.sort(mChildMoves, mComparator);
 	}
 	
-	private void sortChildMoves(){
-		Comparator<GameNode> c = new Comparator<GameNode>() {
-			@Override
-			public int compare(GameNode o1, GameNode o2) {
-				return o1.getHeuristicEval() - o2.getHeuristicEval();
-			}
-		}; 
-		
-		Collections.sort(mChildMoves, c);
-	}
-
 	@Override
 	public ReversiGameNode playTurn(int i, int j) {
 		if(!mBoard.isValidMove(i, j)){
@@ -82,9 +80,9 @@ public class ReversiGameNode implements GameNode{
 		newMove.mBoard.placeTile(i,j);
 
 		newMove.mCurrentTurn = mCurrentTurn.opposite();
-
-//		newMove.calcHeuristicEval();
 		
+		newMove.mHuristicEval = newMove.getHeuristicEval();
+
 		return newMove;
 	}
 
@@ -95,10 +93,22 @@ public class ReversiGameNode implements GameNode{
 
 	@Override
 	public int getHeuristicEval() {
-//		calcHeuristicEval();//TODO!
-		return calcHeuristicEval();
+		return HeuristicEval.dynamic_heuristic_evaluation_function(this);
 	}
 	
+	
+	
+	@Override
+	public int getScore() {
+		int sum = 0;
+		for (int i = 0; i < mBoard.matrix.length; i++) {
+			for (int j = 0; j < mBoard.matrix[0].length; j++) {
+				sum+= mBoard.matrix[i][j].value;
+			}
+		}
+		return sum;
+	}
+
 	@Override
 	public void printState() {
 		System.out.println(mBoard.toString());
@@ -117,21 +127,18 @@ public class ReversiGameNode implements GameNode{
 
 	@Override
 	public int getMaxScore() {
-		return BOARD_SIZE*BOARD_SIZE;
+		return Integer.MAX_VALUE;
 	}
 	
-	private int calcHeuristicEval(){
-		//todo improve heuristic function
-		int sum = 0;
-		for (int i = 0; i < mBoard.matrix.length; i++) {
-			for (int j = 0; j < mBoard.matrix[0].length; j++) {
-				sum+= mBoard.matrix[i][j].value;
-			}
-		}
-//		mHeuristicEval = sum;
-		return sum;
-	}
 
+	@Override
+	public ReversiGameNode passTurn() {
+		ReversiGameNode node = new ReversiGameNode(this);
+		node.mCurrentTurn = mCurrentTurn.opposite();
+		node.mHuristicEval = node.getHeuristicEval();
+		return node;
+	}
+	
 	public Tile getTurn() {
 		return mCurrentTurn;
 	}
@@ -291,11 +298,9 @@ public class ReversiGameNode implements GameNode{
 		}
 	}
 
-	@Override
-	public ReversiGameNode passTurn() {
-		ReversiGameNode node = new ReversiGameNode(this);
-		node.mCurrentTurn = mCurrentTurn.opposite();
-		return node;
+	public Tile[][] getBoardMatrix() {
+		return mBoard.matrix;
 	}
+
 
 }

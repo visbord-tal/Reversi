@@ -3,20 +3,21 @@ package bina.project.alphaBeta;
 public class Main {
 	
 	public static void main(String[] args){
-
-//		new Game().manVsMachine(5);
+		Player player1 = new BranchFactorPlayer(Turn.MAX, 2);
+		Player player2 = new BranchFactorPlayer(Turn.MIN, 5);
+		new Game().machineVsMachine(player1, player2);
+		player1 = new BranchFactorPlayer(Turn.MAX, 5);
+		player2 = new BranchFactorPlayer(Turn.MIN, 2);
+		new Game().machineVsMachine(player1, player2);
+		player1 = new BranchFactorPlayer(Turn.MAX, 3);
+		player2 = new BranchFactorPlayer(Turn.MIN, 6);
+		new Game().machineVsMachine(player1, player2);
+		player1 = new BranchFactorPlayer(Turn.MAX, 6);
+		player2 = new BranchFactorPlayer(Turn.MIN, 3);
+		new Game().machineVsMachine(player1, player2);
 		
-		new Game().machineVsMachine(2,4);
-		new Game().machineVsMachine(4,2);
-//		new Game().machineVsMachine(2,6);
-//		new Game().machineVsMachine(6,2);
-		new Game().machineVsMachine(3,6);
-		new Game().machineVsMachine(6,3);
-//		new Game().machineVsMachine(4,7);
-//		new Game().machineVsMachine(7,4);
-		new Game().machineVsMachine(4,8);
-		new Game().machineVsMachine(8,4);
-		new Game().machineVsMachine(5,5);
+		
+		
 		
 	}
 
