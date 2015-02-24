@@ -1,5 +1,7 @@
 package bina.project.alphaBeta;
 
+import java.util.List;
+
 public class DepthPlayer extends Player {
 
 	private int mDepth;
@@ -10,25 +12,14 @@ public class DepthPlayer extends Player {
 	}
 
 	@Override
-	public GameNode playTurn(GameNode move) {
+	public int runAlphaBetaAlgorithm(GameNode move, IStatistics stats) {
+		int value = mAlgorithm.evalDepth(move, mDepth, stats);
+		return value;
+	}
 
-		if(move.isLeaf()){//No moves
-			return null;
-		}
-		
-		int beta = move.getMaxScore();
-		int alpha = beta*-1;
-		
-		Statistics stats = new Statistics();
-		stats.startMonitoring();
-		
-		int value = AlphBetaAlgorithms.evalDepth(move, mDepth ,alpha, beta, Turn.MAX, stats);
-		
-		stats.endMonitoring();
-		mStatistics.add(stats);
-		mGameStatistics.visitNode(stats.getNumOfNodesVisited(), stats.getNumOfNodesVisited());
-		
-		return chooseBestMove(move.getAllLegalMoves(), value);
+	@Override
+	public List<GameNode> getNextMoves(GameNode move) {
+		return move.getAllLegalMoves();
 	}
 
 }

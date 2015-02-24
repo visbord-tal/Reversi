@@ -18,8 +18,6 @@ public interface GameNode{
 	
 	public GameNode playTurn(int i, int j);
 	
-	public int getMaxScore();
-
 	public GameNode passTurn();
 
 	public int getScore();

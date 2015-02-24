@@ -2,11 +2,7 @@ package bina.project.alphaBeta;
 
 import java.util.Scanner;
 
-public class HumanPlayer extends Player {
-
-	public HumanPlayer(Turn turn) {
-		super(turn);
-	}
+public class HumanPlayer implements IPlayer {
 
 	@Override
 	public GameNode playTurn(GameNode move) {

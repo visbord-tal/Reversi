@@ -11,13 +11,35 @@ public abstract class Player {
 	
 	protected Turn mTurn;
 	
+	protected AlphBetaAlgorithms mAlgorithm;
+	
 	public Player(Turn turn) {
 		this.mTurn = turn;
 		mStatistics = new ArrayList<Statistics>();
 		mGameStatistics = new Statistics();
+		mAlgorithm = new AlphBetaAlgorithms();
 	}
 
-	public abstract GameNode playTurn(GameNode move);
+	public abstract List<GameNode> getNextMoves(GameNode move);
+
+	public abstract int runAlphaBetaAlgorithm(GameNode move, IStatistics stats);
+	
+	public GameNode playTurn(GameNode move){
+		if(move.isLeaf()){//No moves
+			return null;
+		}
+		
+		Statistics stats = new Statistics();
+		stats.startMonitoring();
+		
+		int value = runAlphaBetaAlgorithm(move, stats);
+		
+		stats.endMonitoring();
+		mStatistics.add(stats);
+		mGameStatistics.visitNode(stats.getMaxDepth(), stats.getAvgBrnchingFactor());
+		
+		return chooseBestMove(getNextMoves(move), value);
+	}
 
 	protected GameNode chooseBestMove(List<GameNode> nextMoves, int value) {
 		GameNode childMove;

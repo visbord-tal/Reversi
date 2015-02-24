@@ -1,8 +1,5 @@
 package bina.project.alphaBeta;
 
-import static bina.project.alphaBeta.AlphBetaAlgorithms.evalBranch;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public class BranchFactorPlayer extends Player {
@@ -19,26 +16,15 @@ public class BranchFactorPlayer extends Player {
 	}
 
 	@Override
-	public GameNode playTurn(GameNode move) {
-
-		if(move.isLeaf()){//No moves
-			return null;
-		}
-		
-		int beta = move.getMaxScore();
-		int alpha = beta*-1;
-		
-		Statistics stats = new Statistics();
-		stats.startMonitoring();
-		
+	public int runAlphaBetaAlgorithm(GameNode move, IStatistics stats) {
 //		int value = evalBranch(move, mBranchingFactor, alpha, beta, stats);
-		int value = AlphBetaAlgorithms.iterativeDeepeningEvalBranch(move, mBranchingFactor, alpha, beta, stats);
-		
-		stats.endMonitoring();
-		mStatistics.add(stats);
-		mGameStatistics.visitNode(stats.getMaxDepth(), stats.getAvgBrnchingFactor());
+		int value = mAlgorithm.iterativeDeepeningEvalBranch(move, mBranchingFactor, stats);
+		return value;
+	}
 
-		return chooseBestMove(AlphBetaAlgorithms.getNextMoves(move, mBranchingFactor), value);
+	@Override
+	public List<GameNode> getNextMoves(GameNode move) {
+		return mAlgorithm.getNextBestMoves(move, mBranchingFactor);
 	}
 
 }

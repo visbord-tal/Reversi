@@ -131,12 +131,6 @@ public class ReversiGameNode implements GameNode{
 	}
 
 	@Override
-	public int getMaxScore() {
-		return Integer.MAX_VALUE;
-	}
-	
-
-	@Override
 	public ReversiGameNode passTurn() {
 		ReversiGameNode node = new ReversiGameNode(this);
 		node.mCurrentTurn = mCurrentTurn.opposite();
