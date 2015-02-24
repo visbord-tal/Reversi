@@ -5,7 +5,7 @@ public class Main {
 	public static void main(String[] args){
 		Player b1 = new BranchFactorPlayer(Turn.MAX, 8);
 		Player b2 = new BranchFactorPlayer(Turn.MIN, 5);
-		
+        System.out.println("niv");
 //		Player d1 = new DepthPlayer(Turn.MAX, 6);
 //		Player d2 = new DepthPlayer(Turn.MIN, 6);
 
