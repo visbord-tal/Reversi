@@ -3,6 +3,8 @@ package bina.project.alphaBeta;
 enum Direction{
 	UP, LEFT, DOWN, RIGHT, DIAGONAL1, DIAGONAL2, DIAGONAL3, DIAGONAL4;
 
+	static Direction[] mDirections = new Direction[] {UP, LEFT, DOWN, RIGHT, DIAGONAL1, DIAGONAL2, DIAGONAL3, DIAGONAL4};
+	
 	Pair[][] mPairs =  {{new Pair(0,0), new Pair(0,1), new Pair(0,2), new Pair(0,3), new Pair(0,4), new Pair(0,5), new Pair(0,6), new Pair(0,7)},
 						{new Pair(1,0), new Pair(1,1), new Pair(1,2), new Pair(1,3), new Pair(1,4), new Pair(1,5), new Pair(1,6), new Pair(1,7)},
 						{new Pair(2,0), new Pair(2,1), new Pair(2,2), new Pair(2,3), new Pair(2,4), new Pair(2,5), new Pair(2,6), new Pair(2,7)},
@@ -66,6 +68,6 @@ enum Direction{
 	}
 
 	static Direction[] getAllDirections(){
-		return new Direction[] {UP, LEFT, DOWN, RIGHT, DIAGONAL1, DIAGONAL2, DIAGONAL3, DIAGONAL4,};
+		return mDirections; 
 	}
 }

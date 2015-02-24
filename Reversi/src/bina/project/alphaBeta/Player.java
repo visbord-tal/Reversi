@@ -18,6 +18,26 @@ public abstract class Player {
 	}
 
 	public abstract GameNode playTurn(GameNode move);
+
+	protected GameNode chooseBestMove(List<GameNode> nextMoves, int value) {
+		GameNode childMove;
+		List<GameNode> bestMoves = new ArrayList<GameNode>(); 
+		
+		for (int i = 0; i<nextMoves.size(); i++) {
+			childMove = nextMoves.get(i);
+			if(childMove.getValue()!=null && value == childMove.getValue()){
+				bestMoves.add(childMove);	
+			}
+		}
+		
+		if(bestMoves.size()==0){
+			System.out.println("NOT FOUND!");
+		}
+		
+		int randomIndex = (int)(Math.random()*(bestMoves.size()));
+		
+		return bestMoves.get(randomIndex);
+	}
 	
 	public void printStatistics(){
 		Statistics stat;
@@ -37,26 +57,6 @@ public abstract class Player {
 //		}
 	}
 	
-	protected GameNode chooseBestMove(List<GameNode> nextMoves, int value) {
-		GameNode childMove;
-		List<GameNode> bestMoves = new ArrayList<GameNode>(); 
-		
-		for (int i = 0; i<nextMoves.size(); i++) {
-			childMove = nextMoves.get(i);
-			if(childMove.getValue()!=null && value == childMove.getValue()){
-				bestMoves.add(childMove);	
-			}
-		}
-
-		if(bestMoves.size()==0){
-			System.out.println("NOT FOUND!");
-			throw new RuntimeException();
-		}
-		
-		int randomIndex = (int)(Math.random()*(bestMoves.size()));
-		
-		return bestMoves.get(randomIndex);
-	}
 	
 	
 	

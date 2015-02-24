@@ -7,7 +7,7 @@ import java.util.Queue;
 
 public class AlphBetaAlgorithms {
 	
-	final static int MAX_NODE_COUNT = 1000;
+	final static int MAX_NODE_COUNT = 25000;
 	
 	public static int evalDepth(GameNode move, int depth , int alpha, int beta, Turn turn, IStatistics stats){
 		if(move.isLeaf()|| depth==0){
@@ -138,27 +138,29 @@ public class AlphBetaAlgorithms {
 	
 	/**/
 	static int nodeCount;
+	static boolean mShouldStop;
 	public static int iterativeDeepeningEvalBranch(GameNode move, int branchingFactor, int alpha, int beta, IStatistics stats){
 		nodeCount = 0;
 		int maxDepth = 2;
 		int best = 0;
-		Boolean shouldStop = true;
-		while(nodeCount < MAX_NODE_COUNT && !shouldStop){
+		mShouldStop = false;
+		while(nodeCount < MAX_NODE_COUNT && !mShouldStop){
+			mShouldStop = true;
 			nodeCount = 0;
-			best = iterativeDeepeningEvalBranch2(move, branchingFactor, 0, alpha, beta, Turn.MAX, maxDepth ,stats, shouldStop );
+			best = iterativeDeepeningEvalBranch2(move, branchingFactor, 0, alpha, beta, Turn.MAX, maxDepth ,stats);
 			maxDepth ++;
-			System.out.println("maxDepth:"+maxDepth);
 		}
+		System.out.println("maxDepth:"+maxDepth+", ");
 		return best;
 	}
 	
-	private static int iterativeDeepeningEvalBranch2(GameNode move, int branchingFactor, int depth ,int alpha, int beta, Turn turn,int maxDepth ,IStatistics stats, Boolean shouldStop){
+	private static int iterativeDeepeningEvalBranch2(GameNode move, int branchingFactor, int depth ,int alpha, int beta, Turn turn,int maxDepth ,IStatistics stats){
 		nodeCount++;
 		if(move.isLeaf() || depth==maxDepth){
 			int val = move.getHeuristicEval();
 			stats.visitNode(depth, 0);
-			if(depth==maxDepth){
-				 shouldStop = false;
+			if(!move.isLeaf() ){
+				mShouldStop = false ;
 			}
 			return val;
 		}
@@ -172,7 +174,7 @@ public class AlphBetaAlgorithms {
 			current = beta;
 			stats.visitNode(depth, nextMoves.size());
 			for (GameNode child : nextMoves) {
-				childValue = iterativeDeepeningEvalBranch2(child, branchingFactor ,  depth+1 , alpha, current, turn.next(), maxDepth,stats, shouldStop);
+				childValue = iterativeDeepeningEvalBranch2(child, branchingFactor ,  depth+1 , alpha, current, turn.next(), maxDepth,stats);
 				child.setValue(childValue);
 				
 				current = Math.min(current, childValue);
@@ -189,7 +191,7 @@ public class AlphBetaAlgorithms {
 			current = alpha;
 			
 			for (GameNode child : nextMoves) {
-				childValue = iterativeDeepeningEvalBranch2(child, branchingFactor, depth+1, current, beta, turn.next(),maxDepth, stats, shouldStop);
+				childValue = iterativeDeepeningEvalBranch2(child, branchingFactor, depth+1, current, beta, turn.next(),maxDepth, stats);
 				child.setValue(childValue);
 				
 				current = Math.max(current, childValue);
